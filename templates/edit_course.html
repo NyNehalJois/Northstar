@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Edit {{ course.title }} · Northstar{% endblock %}
+{% block crumb %}<a href="{{ url_for('courses') }}">Courses</a> <span>/</span> Edit course{% endblock %}
+{% block content %}
+<a class="back-link" href="{{ url_for('course_detail', course_id=course.id) }}">← Back to course</a>
+<section class="page-heading">
+  <div><div class="eyebrow"><span class="eyebrow-line"></span> COURSE DETAILS</div><h1>Edit <em>course.</em></h1><p class="page-intro">Update the details learners see for {{ course.title }}.</p></div>
+</section>
+<section class="edit-form-wrap">
+  <div class="form-card edit-form-card">
+    <form action="{{ url_for('save_course', course_id=course.id) }}" method="post" class="stacked-form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <label>Course name<input name="title" required maxlength="120" value="{{ course.title }}"></label>
+      <label>Instructor<input name="instructor" required maxlength="100" value="{{ course.instructor }}"></label>
+      <label>Short description<textarea name="description" rows="3" maxlength="500">{{ course.description }}</textarea></label>
+      <div class="field-row"><label>Starts<input name="start_date" type="date" required value="{{ course.start_date }}"></label><label>Ends<input name="end_date" type="date" required value="{{ course.end_date }}"></label></div>
+      <div class="field-row"><label>Capacity<input name="capacity" type="number" min="{{ course.enrolled }}" max="10000" required value="{{ course.capacity }}"><span class="field-hint">{{ course.enrolled }} learner(s) currently enrolled</span></label><label>Status<select name="status">{% for status in ['Upcoming', 'In progress', 'Completed'] %}<option {% if course.status == status %}selected{% endif %}>{{ status }}</option>{% endfor %}</select></label></div>
+      <div class="form-actions"><a class="button button-outline" href="{{ url_for('course_detail', course_id=course.id) }}">Cancel</a><button class="button button-dark" type="submit">Save changes <span>→</span></button></div>
+    </form>
+  </div>
+</section>
+{% endblock %}

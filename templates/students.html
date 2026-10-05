@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}People · Northstar{% endblock %}
+{% block crumb %}People{% endblock %}
+{% block content %}
+<section class="page-heading">
+  <div><div class="eyebrow"><span class="eyebrow-line"></span> THE PEOPLE</div><h1>Every learner, <em>in view.</em></h1><p class="page-intro">A thoughtful roster makes it easier to bring the right people together.</p></div>
+  {% if archived %}<a class="button button-outline" href="{{ url_for('students') }}">← Active learners</a>{% else %}<a class="button button-dark" href="#add-student"><span>＋</span> Add a learner</a>{% endif %}
+</section>
+<section class="section-layout">
+  <div class="panel table-panel">
+    <div class="panel-heading"><div><div class="eyebrow">{% if archived %}STORED SAFELY{% else %}YOUR COMMUNITY{% endif %}</div><h2>{% if archived %}Archived learners{% else %}All learners{% endif %} <span class="count-pill">{{ students|length }}</span></h2></div><div class="panel-tools"><a class="text-link" href="{{ url_for('students', archived='0' if archived else '1') }}">{% if archived %}View active{% else %}View archive{% endif %} →</a>{% if students %}<label class="search-box"><span>⌕</span><input type="search" data-table-search placeholder="Find a learner" aria-label="Search learners"></label>{% endif %}</div></div>
+    {% if students %}
+    <div class="table-scroll"><table class="people-table"><thead><tr><th>LEARNER</th><th>EMAIL</th><th>PHONE</th><th>COURSES</th><th>STATUS</th><th></th></tr></thead><tbody>
+    {% for student in students %}
+      <tr data-search-row>
+        <td><div class="person-cell"><div class="avatar avatar-{{ loop.index0 % 4 }}">{{ student.name.split()|map('first')|join|upper }}</div><strong>{{ student.name }}</strong></div></td>
+        <td>{{ student.email }}</td><td>{{ student.phone or '—' }}</td><td><span class="enrollment-count">{{ student.course_count }}</span></td><td>{% if archived %}<span class="status-badge status-archived"><i></i>Archived</span>{% else %}<span class="status-badge status-upcoming"><i></i>Active</span>{% endif %}</td><td>{% if archived %}<form action="{{ url_for('archive_student', student_id=student.id) }}" method="post"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="archived" value="0"><button class="table-edit" type="submit">Restore</button></form>{% else %}<div class="table-actions"><a class="table-edit" href="{{ url_for('edit_student', student_id=student.id) }}">Edit</a><form action="{{ url_for('archive_student', student_id=student.id) }}" method="post" data-confirm="Archive this learner? Their course enrollment history will be kept."><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="archived" value="1"><button class="table-edit table-archive" type="submit">Archive</button></form></div>{% endif %}</td>
+      </tr>
+    {% endfor %}
+    </tbody></table></div><div class="no-search-results" hidden>No learners match that search.</div>
+    {% else %}
+    <div class="empty-state table-empty"><div class="empty-art">◎</div><h3>{% if archived %}No archived learners.{% else %}Make space for learners.{% endif %}</h3><p>{% if archived %}Archived learners will appear here, and you can restore them at any time.{% else %}Add your first learner, then invite them to a course.{% endif %}</p></div>
+    {% endif %}
+  </div>
+  {% if not archived %}<aside class="form-card" id="add-student">
+    <div class="eyebrow">GROW THE COMMUNITY</div><h2>Add a learner</h2><p class="form-intro">Keep the people behind the progress together.</p>
+    <form action="{{ url_for('add_student') }}" method="post" class="stacked-form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <label>Full name<input name="name" required maxlength="120" placeholder="e.g. Jordan Lee"></label>
+      <label>Email address<input name="email" type="email" required maxlength="254" placeholder="jordan@example.com"></label>
+      <label>Phone <span class="optional-label">OPTIONAL</span><input name="phone" type="tel" maxlength="40" placeholder="+1 (555) 000-0000"></label>
+      <button class="button button-dark button-full" type="submit">Add learner <span>→</span></button>
+    </form>
+    <div class="privacy-note"><span>✳</span> Learner details stay within your workspace.</div>
+  </aside>{% endif %}
+</section>
+{% endblock %}

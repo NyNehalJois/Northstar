@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}Settings · Northstar{% endblock %}
+{% block crumb %}Settings{% endblock %}
+{% block content %}
+<section class="page-heading">
+  <div>
+    <div class="eyebrow"><span class="eyebrow-line"></span> PREFERENCES</div>
+    <h1>Settings <em>&amp; account.</em></h1>
+    <p class="page-intro">Make Northstar feel right for you and manage your current session.</p>
+  </div>
+</section>
+
+<div class="settings-layout">
+  <section class="panel settings-panel" aria-labelledby="appearance-heading">
+    <div class="settings-section-heading">
+      <span class="settings-icon">◐</span>
+      <div>
+        <h2 id="appearance-heading">Appearance</h2>
+        <p>Choose how Northstar looks on this device.</p>
+      </div>
+    </div>
+    <fieldset class="theme-options">
+      <legend class="visually-hidden">Color theme</legend>
+      <label class="theme-option">
+        <input type="radio" name="theme" value="light">
+        <span class="theme-preview theme-preview-light" aria-hidden="true"><i></i><b></b></span>
+        <span class="theme-option-copy"><strong>Light</strong><small>Bright and clear</small></span>
+      </label>
+      <label class="theme-option">
+        <input type="radio" name="theme" value="dark">
+        <span class="theme-preview theme-preview-dark" aria-hidden="true"><i></i><b></b></span>
+        <span class="theme-option-copy"><strong>Dark</strong><small>Easy on the eyes at night</small></span>
+      </label>
+      <label class="theme-option">
+        <input type="radio" name="theme" value="system">
+        <span class="theme-preview theme-preview-system" aria-hidden="true"><i></i><b></b></span>
+        <span class="theme-option-copy"><strong>System</strong><small>Follow your device setting</small></span>
+      </label>
+    </fieldset>
+    <p class="settings-hint" id="theme-status" role="status">Your theme choice is saved on this device.</p>
+  </section>
+
+  <section class="panel settings-panel" aria-labelledby="account-heading">
+    <div class="settings-section-heading">
+      <span class="settings-icon">◎</span>
+      <div>
+        <h2 id="account-heading">Administrator account</h2>
+        <p>Account currently signed in to this workspace.</p>
+      </div>
+    </div>
+    <dl class="settings-details">
+      <div><dt>Administrator name</dt><dd>{{ admin_username }}</dd></div>
+      <div><dt>Access</dt><dd>Workspace administrator</dd></div>
+      <div><dt>Password</dt><dd>Hidden for your security</dd></div>
+    </dl>
+    <p class="settings-hint">To change administrator credentials, update <code>ADMIN_USERNAME</code> and <code>ADMIN_PASSWORD</code> in your app environment, then restart the app.</p>
+  </section>
+
+  <section class="panel settings-panel session-settings" aria-labelledby="session-heading">
+    <div class="settings-section-heading">
+      <span class="settings-icon">↪</span>
+      <div>
+        <h2 id="session-heading">Session</h2>
+        <p>Sign out to end your administrator session on this device.</p>
+      </div>
+    </div>
+    <div class="session-action">
+      <div><strong>Sign out of Northstar</strong><span>You will need to sign in again to manage this workspace.</span></div>
+      <form action="{{ url_for('logout') }}" method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="button button-outline" type="submit">Sign out <span aria-hidden="true">→</span></button>
+      </form>
+    </div>
+  </section>
+</div>
+{% endblock %}

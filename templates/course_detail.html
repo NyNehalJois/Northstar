@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}{{ course.title }} · Northstar{% endblock %}
+{% block crumb %}<a href="{{ url_for('courses') }}">Courses</a> <span>/</span> {{ course.title }}{% endblock %}
+{% block content %}
+<a class="back-link" href="{{ url_for('courses') }}">← All courses</a>
+<section class="detail-hero">
+  <div class="detail-copy"><div class="eyebrow"><span class="eyebrow-line"></span> COURSE DETAIL</div><h1>{{ course.title }}</h1><p class="page-intro">{{ course.description or 'A focused learning experience, made for curious minds.' }}</p><div class="detail-meta"><span class="status-badge status-{{ course.status|lower|replace(' ', '-') }}"><i></i>{{ course.status }}</span><span>Led by <strong>{{ course.instructor }}</strong></span><span>{{ course.start_date }} <i>→</i> {{ course.end_date }}</span></div></div>
+  {% if not course.archived_at %}<a class="button button-outline detail-edit" href="{{ url_for('edit_course', course_id=course.id) }}">Edit course</a>{% endif %}
+  <div class="capacity-card"><span>SEATS FILLED</span><strong>{{ course.enrolled }}<small> / {{ course.capacity }}</small></strong><div class="progress-track"><span style="width: {{ (course.enrolled / course.capacity * 100)|int }}%"></span></div><p>{{ course.capacity - course.enrolled }} seats remaining</p></div>
+</section>
+{% if course.archived_at %}<div class="archive-notice">This course is archived. Its roster is preserved and new enrollments are disabled. <a href="{{ url_for('courses', archived='1') }}">Manage archived courses →</a></div>{% endif %}
+<section class="section-layout detail-layout">
+  <div class="panel table-panel roster-panel">
+    <div class="panel-heading"><div><div class="eyebrow">THE COHORT</div><h2>Enrolled learners <span class="count-pill">{{ enrolled_students|length }}</span></h2></div></div>
+    {% if enrolled_students %}
+    <div class="table-scroll"><table class="people-table"><thead><tr><th>LEARNER</th><th>EMAIL</th><th>ENROLLED</th><th></th></tr></thead><tbody>
+    {% for student in enrolled_students %}
+      <tr><td><div class="person-cell"><div class="avatar avatar-{{ loop.index0 % 4 }}">{{ student.name.split()|map('first')|join|upper }}</div><strong>{{ student.name }}</strong></div>{% if student.archived_at %}<span class="table-subtitle">Archived learner</span>{% endif %}</td><td>{{ student.email }}</td><td>{{ student.enrolled_at[:10] }}</td><td>{% if not course.archived_at %}<form action="{{ url_for('remove_enrollment', course_id=course.id, student_id=student.id) }}" method="post" data-confirm="Remove {{ student.name }} from this course?"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="remove-button" type="submit">Remove</button></form>{% endif %}</td></tr>
+    {% endfor %}
+    </tbody></table></div>
+    {% else %}
+    <div class="empty-state table-empty"><div class="empty-art">◎</div><h3>The first seat is waiting.</h3><p>Enroll a learner to start bringing this cohort together.</p></div>
+    {% endif %}
+  </div>
+  {% if not course.archived_at %}<aside class="form-card enrollment-card"><div class="eyebrow">FILL A SEAT</div><h2>Enroll a learner</h2><p class="form-intro">Add someone to this course cohort.</p>
+    {% if available_students and course.enrolled < course.capacity %}
+    <form action="{{ url_for('add_enrollment', course_id=course.id) }}" method="post" class="stacked-form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <label>Choose learner<select name="student_id" required><option value="">Select a learner</option>{% for student in available_students %}<option value="{{ student.id }}">{{ student.name }} · {{ student.email }}</option>{% endfor %}</select></label>
+      <button class="button button-dark button-full" type="submit">Enroll learner <span>→</span></button>
+    </form>
+    {% elif course.enrolled >= course.capacity %}
+    <div class="capacity-message"><span>✳</span><strong>This cohort is full.</strong><p>Remove a learner to make a seat available.</p></div>
+    {% else %}
+    <div class="capacity-message"><span>✳</span><strong>No learners to add yet.</strong><p>Add a learner to your people list first.</p><a href="{{ url_for('students') }}">Go to people →</a></div>
+    {% endif %}
+  </aside>{% else %}<aside class="form-card enrollment-card"><div class="eyebrow">ARCHIVED</div><h2>Course not enrolling</h2><p class="form-intro">Restore this course from the archive to resume enrollment.</p><a class="button button-outline" href="{{ url_for('courses', archived='1') }}">Manage archive →</a></aside>{% endif %}
+</section>
+{% endblock %}

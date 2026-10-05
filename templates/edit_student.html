@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Edit {{ student.name }} · Northstar{% endblock %}
+{% block crumb %}<a href="{{ url_for('students') }}">People</a> <span>/</span> Edit learner{% endblock %}
+{% block content %}
+<a class="back-link" href="{{ url_for('students') }}">← Back to learners</a>
+<section class="page-heading">
+  <div><div class="eyebrow"><span class="eyebrow-line"></span> LEARNER PROFILE</div><h1>Edit <em>learner.</em></h1><p class="page-intro">Keep contact details up to date for {{ student.name }}.</p></div>
+</section>
+<section class="edit-form-wrap">
+  <div class="form-card edit-form-card">
+    <form action="{{ url_for('save_student', student_id=student.id) }}" method="post" class="stacked-form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <label>Full name<input name="name" required maxlength="120" value="{{ student.name }}"></label>
+      <label>Email address<input name="email" type="email" required maxlength="254" value="{{ student.email }}"></label>
+      <label>Phone <span class="optional-label">OPTIONAL</span><input name="phone" type="tel" maxlength="40" value="{{ student.phone }}"></label>
+      <div class="form-actions"><a class="button button-outline" href="{{ url_for('students') }}">Cancel</a><button class="button button-dark" type="submit">Save changes <span>→</span></button></div>
+    </form>
+  </div>
+</section>
+{% endblock %}

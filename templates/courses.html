@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Courses · Northstar{% endblock %}
+{% block crumb %}Courses{% endblock %}
+{% block content %}
+<section class="page-heading">
+  <div><div class="eyebrow"><span class="eyebrow-line"></span> THE PROGRAMS</div><h1>Courses, <em>with purpose.</em></h1><p class="page-intro">Build a learning experience. Bring the right people into it.</p></div>
+  {% if archived %}<a class="button button-outline" href="{{ url_for('courses') }}">← Active courses</a>{% else %}<a class="button button-dark" href="#create-course"><span>＋</span> New course</a>{% endif %}
+</section>
+<section class="section-layout">
+  <div class="panel table-panel">
+    <div class="panel-heading"><div><div class="eyebrow">{% if archived %}STORED SAFELY{% else %}YOUR CATALOGUE{% endif %}</div><h2>{% if archived %}Archived courses{% else %}All courses{% endif %} <span class="count-pill">{{ courses|length }}</span></h2></div><a class="text-link" href="{{ url_for('courses', archived='0' if archived else '1') }}">{% if archived %}View active{% else %}View archive{% endif %} →</a></div>
+    {% if courses %}
+    <div class="table-scroll"><table><thead><tr><th>COURSE</th><th>INSTRUCTOR</th><th>DATES</th><th>ENROLLMENT</th><th>STATUS</th><th></th></tr></thead><tbody>
+    {% for course in courses %}
+      <tr>
+        <td><a class="table-title" href="{{ url_for('course_detail', course_id=course.id) }}">{{ course.title }}</a><span class="table-subtitle">{{ course.description or 'No description yet' }}</span></td>
+        <td>{{ course.instructor }}</td><td>{{ course.start_date }}<span class="table-subtitle">to {{ course.end_date }}</span></td>
+        <td><span class="enrollment-count">{{ course.enrolled }} <span>/ {{ course.capacity }}</span></span></td>
+        <td>{% if archived %}<span class="status-badge status-archived"><i></i>Archived</span>{% else %}<span class="status-badge status-{{ course.status|lower|replace(' ', '-') }}"><i></i>{{ course.status }}</span>{% endif %}</td>
+        <td><div class="table-actions">{% if archived %}<form action="{{ url_for('archive_course', course_id=course.id) }}" method="post"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="archived" value="0"><button class="table-edit" type="submit">Restore</button></form>{% else %}<a class="table-arrow" href="{{ url_for('course_detail', course_id=course.id) }}" aria-label="Open {{ course.title }}">↗</a><a class="table-edit" href="{{ url_for('edit_course', course_id=course.id) }}">Edit</a><form action="{{ url_for('archive_course', course_id=course.id) }}" method="post" data-confirm="Archive this course? Its enrollment history will be kept."><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="archived" value="1"><button class="table-edit table-archive" type="submit">Archive</button></form>{% endif %}</div></td>
+      </tr>
+    {% endfor %}
+    </tbody></table></div>
+    {% else %}
+    <div class="empty-state table-empty"><div class="empty-art">▤</div><h3>{% if archived %}No archived courses.{% else %}Your catalogue starts here.{% endif %}</h3><p>{% if archived %}Archived courses will appear here, and you can restore them at any time.{% else %}Create a course and give your learners something to look forward to.{% endif %}</p></div>
+    {% endif %}
+  </div>
+  {% if not archived %}<aside class="form-card" id="create-course">
+    <div class="eyebrow">MAKE IT HAPPEN</div><h2>Create a course</h2><p class="form-intro">The details that turn an idea into a learning experience.</p>
+    <form action="{{ url_for('add_course') }}" method="post" class="stacked-form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <label>Course name<input name="title" required maxlength="120" placeholder="e.g. Design systems, from scratch"></label>
+      <label>Instructor<input name="instructor" required maxlength="100" placeholder="Who's leading the way?"></label>
+      <label>Short description<textarea name="description" rows="3" maxlength="500" placeholder="What will learners take away?"></textarea></label>
+      <div class="field-row"><label>Starts<input name="start_date" type="date" required></label><label>Ends<input name="end_date" type="date" required></label></div>
+      <div class="field-row"><label>Capacity<input name="capacity" type="number" min="1" max="10000" required placeholder="24"></label><label>Status<select name="status"><option>Upcoming</option><option>In progress</option><option>Completed</option></select></label></div>
+      <button class="button button-dark button-full" type="submit">Create course <span>→</span></button>
+    </form>
+  </aside>{% endif %}
+</section>
+{% endblock %}

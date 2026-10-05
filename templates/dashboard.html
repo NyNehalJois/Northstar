@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Overview · Northstar{% endblock %}
+{% block content %}
+<section class="welcome-row">
+  <div><div class="eyebrow"><span class="eyebrow-line"></span> YOUR LEARNING HUB</div><h1>Good work starts<br>with <em>a clear view.</em></h1><p class="page-intro">A little space to shape what your team learns next.</p></div>
+  <a class="button button-dark" href="{{ url_for('courses') }}#create-course"><span>＋</span> Create a course</a>
+</section>
+<section class="stat-grid" aria-label="Workspace totals">
+  <article class="stat-card stat-dark"><div class="stat-heading">ALL COURSES <span>↗</span></div><div class="stat-number">{{ stats.courses }}</div><div class="stat-foot">Programs in your workspace</div><div class="stat-watermark">C</div></article>
+  <article class="stat-card"><div class="stat-heading">ACTIVE LEARNERS <span class="stat-icon">◎</span></div><div class="stat-number">{{ stats.students }}</div><div class="stat-foot">People ready to grow</div></article>
+  <article class="stat-card stat-accent"><div class="stat-heading">TOTAL ENROLLMENTS <span class="stat-icon">↗</span></div><div class="stat-number">{{ stats.enrollments }}</div><div class="stat-foot">Seats filled across courses</div><div class="accent-orbit"></div></article>
+</section>
+<section class="content-grid">
+  <div class="panel course-panel">
+    <div class="panel-heading"><div><div class="eyebrow">WHAT'S TAKING SHAPE</div><h2>Courses in the calendar</h2></div><a class="text-link" href="{{ url_for('courses') }}">All courses <span>→</span></a></div>
+    {% if courses %}
+    <div class="course-list">
+      {% for course in courses %}
+      <a class="course-row" href="{{ url_for('course_detail', course_id=course.id) }}">
+        <div class="course-date"><span>{{ course.start_date[5:7] }}</span><strong>{{ course.start_date[8:10] }}</strong></div>
+        <div class="course-main"><strong>{{ course.title }}</strong><span>{{ course.instructor }} <i>·</i> {{ course.status }}</span></div>
+        <div class="course-progress-wrap"><div class="seat-label">{{ course.enrolled }} / {{ course.capacity }} seats</div><div class="progress-track"><span style="width: {{ (course.enrolled / course.capacity * 100)|int }}%"></span></div></div>
+        <span class="row-arrow">↗</span>
+      </a>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state"><div class="empty-art">✳</div><h3>A good place to begin.</h3><p>Create your first course and give learning somewhere to go.</p><a class="button button-outline" href="{{ url_for('courses') }}#create-course">Create your first course <span>→</span></a></div>
+    {% endif %}
+  </div>
+  <aside class="note-card"><div class="note-top"><span class="note-label">A NOTE ON LEARNING</span><span class="note-star">✳</span></div><blockquote>“The beautiful thing about learning is that no one can take it away from you.”</blockquote><div class="note-author"><span></span> B. B. KING</div><div class="note-illustration"><i></i><i></i><i></i><i></i><i></i><b>✳</b></div></aside>
+</section>
+{% endblock %}

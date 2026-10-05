@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: northstar-training
+    runtime: python
+    plan: starter
+    region: singapore
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn --bind 0.0.0.0:$PORT --workers 1 --threads 4 --access-logfile - --error-logfile - app:app
+    healthCheckPath: /healthz
+    disk:
+      name: northstar-training-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: DATABASE_PATH
+        value: /var/data/training.db
+      - key: FLASK_COOKIE_SECURE
+        value: "1"
+      - key: FLASK_SECRET_KEY
+        generateValue: true
+      - key: ADMIN_USERNAME
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false

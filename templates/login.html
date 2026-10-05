@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f4ef">
+  <title>Sign in · Northstar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body class="login-page">
+  <main class="login-card">
+    <a class="brand login-brand" href="{{ url_for('login') }}">
+      <span class="brand-mark">N</span>
+      <span class="brand-copy">northstar<span>LEARNING OPERATIONS</span></span>
+    </a>
+    <div class="eyebrow"><span class="eyebrow-line"></span> YOUR LEARNING HUB</div>
+    <h1>Welcome <em>back.</em></h1>
+    <p class="page-intro">Sign in to manage your courses and learners.</p>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-stack login-flashes" aria-live="polite">
+          {% for category, message in messages %}<div class="flash flash-{{ category }}">{{ message }}</div>{% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+    {% if not credentials_configured %}
+      <div class="login-setup-notice">Administrator credentials are not configured. Set <code>ADMIN_USERNAME</code> and <code>ADMIN_PASSWORD</code> in your environment, then restart the app.</div>
+    {% endif %}
+    <form action="{{ url_for('login', next=request.args.get('next', '')) }}" method="post" class="stacked-form login-form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <input type="hidden" name="next" value="{{ request.args.get('next', '') }}">
+      <label>Administrator name<input name="username" autocomplete="username" required autofocus></label>
+      <label>Password<input name="password" type="password" autocomplete="current-password" required></label>
+      <button class="button button-dark button-full" type="submit">Sign in <span>→</span></button>
+    </form>
+    <p class="login-footnote">Administrator access only. Sessions use secure, HTTP-only cookies.</p>
+  </main>
+</body>
+</html>
