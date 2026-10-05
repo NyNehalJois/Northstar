@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f4ef">
+  <meta name="description" content="Northstar is a responsive training management platform for organizing courses, learners, and enrollments.">
+  <title>Northstar — Training, made clear</title>
+  <script>
+    (() => {
+      const preference = localStorage.getItem("northstar-showcase-theme") || "light";
+      document.documentElement.dataset.theme = preference;
+    })();
+  </script>
+  <style>
+    :root{color-scheme:light;--paper:#f5f4ef;--surface:#fffefa;--ink:#23261f;--muted:#77796f;--line:#e5e4dc;--olive:#66744b;--olive-pale:#e9eddf;--coral:#e88365;--shadow:0 22px 70px #292c2014}
+    :root[data-theme="dark"]{color-scheme:dark;--paper:#191b17;--surface:#22251f;--ink:#eceee6;--muted:#a0a397;--line:#393c34;--olive:#bac99a;--olive-pale:#30372a;--coral:#ef987c;--shadow:0 22px 70px #0005}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.6 "DM Sans",Inter,Segoe UI,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+    a{color:inherit;text-decoration:none}
+    button{font:inherit}
+    .wrap{width:min(1120px,calc(100% - 40px));margin:0 auto}
+    .topbar{height:76px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line)}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:-.6px}
+    .brand-mark{display:grid;place-items:center;width:34px;height:34px;border-radius:11px 11px 11px 3px;background:var(--olive);color:#fff;font-size:18px}
+    .brand small{display:block;margin-top:-2px;color:var(--muted);font-size:8px;letter-spacing:1.4px}
+    .nav{display:flex;align-items:center;gap:25px;color:var(--muted);font-size:12px;font-weight:600}
+    .nav a:hover{color:var(--olive)}
+    .nav .source-link{padding:9px 13px;border:1px solid var(--line);border-radius:5px;color:var(--ink)}
+    .theme-toggle{width:35px;height:35px;border:1px solid var(--line);border-radius:50%;background:var(--surface);color:var(--ink);cursor:pointer}
+    .hero{display:grid;grid-template-columns:.9fr 1.1fr;align-items:center;gap:44px;padding:76px 0 82px}
+    .eyebrow{display:flex;align-items:center;gap:9px;color:var(--muted);font-size:10px;font-weight:700;letter-spacing:1.7px;text-transform:uppercase}
+    .eyebrow:before{width:19px;height:1px;background:var(--coral);content:""}
+    h1,h2,h3,p{margin-top:0}
+    h1{max-width:510px;margin:17px 0 16px;font:600 clamp(42px,5.6vw,67px)/1.04 Manrope,Inter,Segoe UI,Arial,sans-serif;letter-spacing:-3.5px}
+    h1 em{color:var(--olive);font-family:Georgia,serif;font-weight:400}
+    .hero-copy>p{max-width:465px;margin-bottom:23px;color:var(--muted);font-size:15px}
+    .actions{display:flex;flex-wrap:wrap;gap:10px}
+    .button{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:43px;padding:0 16px;border:1px solid transparent;border-radius:5px;font-size:11px;font-weight:700}
+    .button-primary{background:var(--ink);color:var(--surface)}
+    .button-primary span{color:#c6d29f}
+    .button-secondary{border-color:var(--line);background:var(--surface)}
+    .static-note{display:flex;gap:8px;max-width:450px;margin-top:19px;color:var(--muted);font-size:10px;line-height:1.6}
+    .static-note strong{color:var(--olive)}
+    .preview{padding:14px;border:1px solid var(--line);border-radius:11px;background:var(--surface);box-shadow:var(--shadow);transform:rotate(1deg)}
+    .preview-bar{display:flex;align-items:center;gap:6px;padding:1px 3px 12px;border-bottom:1px solid var(--line)}
+    .preview-bar i{width:7px;height:7px;border-radius:50%;background:#e4a28b}
+    .preview-bar i:nth-child(2){background:#d4bd7e}.preview-bar i:nth-child(3){background:#9eae83}
+    .preview-bar span{margin-left:auto;color:var(--muted);font-size:8px;letter-spacing:1px}
+    .preview-body{display:grid;grid-template-columns:104px 1fr;min-height:300px}
+    .preview-side{padding:16px 10px;border-right:1px solid var(--line)}
+    .preview-logo{margin-bottom:22px;font-size:10px;font-weight:800}
+    .preview-logo b{display:inline-grid;place-items:center;width:20px;height:20px;margin-right:5px;border-radius:7px 7px 7px 2px;background:var(--olive);color:white}
+    .preview-nav{display:grid;gap:7px}
+    .preview-nav span{padding:7px 6px;border-radius:4px;color:var(--muted);font-size:8px}
+    .preview-nav .selected{background:var(--olive-pale);color:var(--ink);font-weight:700}
+    .preview-main{padding:18px}
+    .preview-kicker{color:var(--muted);font-size:7px;font-weight:700;letter-spacing:1.5px}
+    .preview-main h2{margin:6px 0 14px;font-size:19px;letter-spacing:-.8px}
+    .preview-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+    .preview-stat{padding:10px 9px;border:1px solid var(--line);border-radius:5px}
+    .preview-stat span{display:block;color:var(--muted);font-size:6px;font-weight:700;letter-spacing:.6px}
+    .preview-stat strong{display:block;margin-top:5px;font-size:20px}
+    .preview-stat.dark{background:#292d25;color:#fffefa;border-color:#292d25}
+    .preview-stat.dark span{color:#c7c9bd}
+    .preview-course{margin-top:12px;padding:12px;border:1px solid var(--line);border-radius:5px}
+    .preview-course-head{display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:7px;font-weight:700;letter-spacing:.7px}
+    .preview-course-row{display:flex;align-items:center;gap:9px;margin-top:11px}
+    .date-chip{display:grid;place-items:center;width:29px;height:31px;border-radius:4px;background:var(--olive-pale);color:var(--olive);font-size:8px;font-weight:700}
+    .preview-course-row strong,.preview-course-row small{display:block}
+    .preview-course-row strong{font-size:8px}
+    .preview-course-row small{color:var(--muted);font-size:7px}
+    .section{padding:61px 0;border-top:1px solid var(--line)}
+    .section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:24px}
+    .section h2{margin:8px 0 0;font:600 32px/1.15 Manrope,Inter,Segoe UI,Arial,sans-serif;letter-spacing:-1.3px}
+    .section-head p{max-width:370px;margin:0;color:var(--muted);font-size:12px}
+    .feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}
+    .feature{min-height:150px;padding:20px;border:1px solid var(--line);border-radius:7px;background:var(--surface)}
+    .feature-icon{display:grid;place-items:center;width:31px;height:31px;margin-bottom:17px;border-radius:7px;background:var(--olive-pale);color:var(--olive);font-weight:700}
+    .feature h3{margin-bottom:6px;font-size:12px}
+    .feature p{margin:0;color:var(--muted);font-size:10px;line-height:1.65}
+    .stack-row{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:19px 0;border-top:1px solid var(--line)}
+    .stack-row:last-child{border-bottom:1px solid var(--line)}
+    .stack-row strong{font-size:11px}
+    .stack-row span{color:var(--muted);font-size:10px;text-align:right}
+    .cta{display:flex;align-items:center;justify-content:space-between;gap:25px;margin:50px 0;padding:29px 31px;border-radius:8px;background:var(--olive-pale)}
+    .cta h2{margin:5px 0 0;font:600 22px Manrope,Inter,Segoe UI,Arial,sans-serif;letter-spacing:-.7px}
+    .cta p{margin:5px 0 0;color:var(--muted);font-size:10px}
+    .footer{display:flex;justify-content:space-between;gap:15px;padding:17px 0 24px;border-top:1px solid var(--line);color:var(--muted);font-size:9px}
+    .footer a{color:var(--olive);font-weight:700}
+    @media(max-width:760px){.hero{grid-template-columns:1fr;gap:34px;padding:55px 0 61px}.hero-copy>p{max-width:550px}.preview{max-width:540px;width:100%;margin:0 auto;transform:none}.section-head{display:block}.section-head p{margin-top:11px}.feature-grid{grid-template-columns:1fr 1fr}}
+    @media(max-width:520px){.wrap{width:min(100% - 30px,1120px)}.topbar{height:64px}.nav{gap:11px}.nav>a:not(.source-link){display:none}.nav .source-link{padding:7px 9px;font-size:10px}.hero{padding:43px 0 49px}h1{font-size:45px;letter-spacing:-2.5px}.hero-copy>p{font-size:13px}.preview{padding:9px}.preview-body{grid-template-columns:76px 1fr;min-height:256px}.preview-side{padding:12px 6px}.preview-main{padding:13px 9px}.preview-stats{gap:4px}.preview-stat{padding:8px 6px}.preview-stat span{font-size:5px}.preview-stat strong{font-size:17px}.preview-course{padding:9px}.feature-grid{grid-template-columns:1fr}.feature{min-height:0;padding:17px}.feature-icon{margin-bottom:11px}.section{padding:44px 0}.section h2{font-size:27px}.cta{align-items:flex-start;flex-direction:column;margin:35px 0;padding:23px}.cta .button{width:100%}.footer{align-items:flex-start;flex-direction:column}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  </style>
+</head>
+<body>
+  <header class="wrap topbar">
+    <a class="brand" href="#" aria-label="Northstar home">
+      <span class="brand-mark">N</span>
+      <span>northstar<small>LEARNING OPERATIONS</small></span>
+    </a>
+    <nav class="nav" aria-label="Main navigation">
+      <a href="#features">Features</a>
+      <a href="#technology">Technology</a>
+      <a class="source-link" href="https://github.com/NyNehalJois/Northstar" target="_blank" rel="noreferrer">View source ↗</a>
+      <button class="theme-toggle" type="button" aria-label="Switch to dark theme" title="Toggle theme">◐</button>
+    </nav>
+  </header>
+
+  <main class="wrap">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <div class="eyebrow">A TRAINING MANAGEMENT PLATFORM</div>
+        <h1 id="hero-title">Every learner, <em>in view.</em></h1>
+        <p>A thoughtful home for courses, learners, and the moments where learning happens. Northstar makes the work behind great training feel clear.</p>
+        <div class="actions">
+          <a class="button button-primary" href="https://github.com/NyNehalJois/Northstar" target="_blank" rel="noreferrer">Explore the project <span>↗</span></a>
+          <a class="button button-secondary" href="#features">Discover features <span>↓</span></a>
+        </div>
+        <div class="static-note"><strong>PROJECT PREVIEW</strong><span>This GitHub Pages site is a static showcase. The interactive Flask app requires a Python server; no real account or records are available here.</span></div>
+      </div>
+
+      <div class="preview" role="img" aria-label="Illustration of the Northstar training management dashboard">
+        <div class="preview-bar"><i></i><i></i><i></i><span>NORTHSTAR · WORKSPACE</span></div>
+        <div class="preview-body">
+          <aside class="preview-side">
+            <div class="preview-logo"><b>N</b>northstar</div>
+            <div class="preview-nav"><span class="selected">⌂ &nbsp; Overview</span><span>▤ &nbsp; Courses</span><span>◎ &nbsp; People</span><span>⚙ &nbsp; Settings</span></div>
+          </aside>
+          <div class="preview-main">
+            <div class="preview-kicker">YOUR LEARNING HUB</div>
+            <h2>Good work starts<br>with a clear view.</h2>
+            <div class="preview-stats">
+              <div class="preview-stat dark"><span>ALL COURSES</span><strong>08</strong></div>
+              <div class="preview-stat"><span>LEARNERS</span><strong>64</strong></div>
+              <div class="preview-stat"><span>ENROLLMENTS</span><strong>92</strong></div>
+            </div>
+            <div class="preview-course">
+              <div class="preview-course-head"><span>WHAT'S TAKING SHAPE</span><span>VIEW ALL →</span></div>
+              <div class="preview-course-row"><span class="date-chip">NOV<br>12</span><span><strong>Designing with intention</strong><small>Workshop · Upcoming</small></span></div>
+              <div class="preview-course-row"><span class="date-chip">NOV<br>18</span><span><strong>Foundations of facilitation</strong><small>Learning lab · Upcoming</small></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="features">
+      <div class="section-head">
+        <div><div class="eyebrow">BUILT FOR THE EVERYDAY</div><h2>Everything in its place.</h2></div>
+        <p>From the first course outline to the final seat on a roster, Northstar keeps learning operations organized.</p>
+      </div>
+      <div class="feature-grid">
+        <article class="feature"><div class="feature-icon">▤</div><h3>Course management</h3><p>Create and update courses with dates, instructor details, capacity, and clear status.</p></article>
+        <article class="feature"><div class="feature-icon">◎</div><h3>Learner directory</h3><p>Keep learner contact details organized with searchable lists and duplicate-email protection.</p></article>
+        <article class="feature"><div class="feature-icon">↗</div><h3>Enrollment &amp; rosters</h3><p>Manage course rosters while preventing duplicate registrations and over-capacity enrollment.</p></article>
+        <article class="feature"><div class="feature-icon">↺</div><h3>Archive &amp; restore</h3><p>Preserve course and learner history when records are archived or restored.</p></article>
+        <article class="feature"><div class="feature-icon">◐</div><h3>A considered interface</h3><p>Responsive layouts and persistent light, dark, or system appearance preferences.</p></article>
+        <article class="feature"><div class="feature-icon">⌑</div><h3>Protected workspace</h3><p>Administrator sign-in and CSRF protection for state-changing actions in the full app.</p></article>
+      </div>
+    </section>
+
+    <section class="section" id="technology">
+      <div class="section-head">
+        <div><div class="eyebrow">SMALL, CLEAR, DEPENDABLE</div><h2>Made with the right tools.</h2></div>
+        <p>A deliberately simple stack keeps the project easy to run, understand, and extend.</p>
+      </div>
+      <div class="stack-row"><strong>Backend</strong><span>Python 3 · Flask</span></div>
+      <div class="stack-row"><strong>Data</strong><span>SQLite</span></div>
+      <div class="stack-row"><strong>Frontend</strong><span>Jinja · HTML · CSS · Vanilla JavaScript</span></div>
+      <div class="stack-row"><strong>Deployment configuration</strong><span>Render Blueprint · GitHub Pages showcase</span></div>
+    </section>
+
+    <section class="cta">
+      <div><div class="eyebrow">TAKE A CLOSER LOOK</div><h2>Learning, in motion.</h2><p>Explore the source code, implementation notes, and instructions to run Northstar locally.</p></div>
+      <a class="button button-primary" href="https://github.com/NyNehalJois/Northstar" target="_blank" rel="noreferrer">Open on GitHub <span>↗</span></a>
+    </section>
+  </main>
+
+  <footer class="wrap footer"><span>Northstar · Training management, made clear</span><a href="https://github.com/NyNehalJois/Northstar" target="_blank" rel="noreferrer">Project source on GitHub ↗</a></footer>
+  <script>
+    const themeButton = document.querySelector(".theme-toggle");
+    const updateThemeLabel = () => {
+      const nextTheme = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+      themeButton.setAttribute("aria-label", `Switch to ${nextTheme} theme`);
+    };
+    updateThemeLabel();
+    themeButton.addEventListener("click", () => {
+      const nextTheme = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+      document.documentElement.dataset.theme = nextTheme;
+      localStorage.setItem("northstar-showcase-theme", nextTheme);
+      updateThemeLabel();
+    });
+  </script>
+</body>
+</html>

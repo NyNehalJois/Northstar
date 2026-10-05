@@ -2,6 +2,10 @@
 
 Northstar is a responsive training operations app for managing courses, learners, and course enrollments. It combines a Flask and SQLite backend with a custom, framework-free HTML, CSS, and JavaScript interface.
 
+[View the GitHub Pages showcase](https://nynehaljois.github.io/Northstar/) · [Browse the source code](https://github.com/NyNehalJois/Northstar)
+
+> The GitHub Pages site is a static showcase. The interactive Flask application requires a Python server; no live admin, database, or course management is hosted on Pages.
+
 ## Project highlights
 
 - Course lifecycle management with date, capacity, and status validation
